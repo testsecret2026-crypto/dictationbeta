@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文聽寫練習 </title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Microsoft JhengHei', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            padding: 0 1rem;
+        }
+        
+        .main-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        
+        .page-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .page-subtitle {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .controls-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+            border-left: 4px solid #007bff;
+            padding-left: 0.8rem;
+        }
+        
+        .form-label {
+            color: #495057;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .form-select, .form-control {
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-outline-danger {
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            background: white;
+        }
+        
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-outline-secondary {
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            background: white;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        textarea {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            background: #fefef7;
+        }
+        
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        
+        /* 段落顯示區域 */
+        .paragraph-display {
+            background-color: #fefefe;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .sentence-item {
+            display: block;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .sentence-item:hover {
+            background-color: #f0f0f0;
+            border-color: #adb5bd;
+        }
+        
+        .sentence-item.active-reading {
+            background-color: #ff9800 !important;
+            color: white !important;
+            border-color: #ff9800 !important;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+        }
+        
+        .sentence-item.completed {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .sentence-number {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            border-radius: 20px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.7rem;
+            margin-right: 0.6rem;
+            font-weight: 600;
+        }
+        
+        .sentence-text {
+            display: inline;
+        }
+        
+        .status-bar {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .status-badge {
+            background-color: #2c3e50;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .current-sentence {
+            background-color: #fff3e0;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: #b85c00;
+            max-width: 65%;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .preview-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .rule-note {
+            background-color: #e7f3ff;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #2c3e50;
+            margin-top: 0.8rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .feature-item {
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .feature-icon {
+            color: #007bff;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-title {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .feature-desc {
+            color: #6c757d;
+            font-size: 0.75rem;
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 1.2rem;
+            }
+            .current-sentence {
+                max-width: 100%;
+                white-space: normal;
+            }
+            .status-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .sentence-item {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                英文聽寫練習 - 測試版本
+            </a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="main-card">
+            <h1 class="page-title">📖 英文聽寫練習 Dictation Master </h1>
+            <p class="page-subtitle">自動分句 · 逗號停頓 · 每三詞微停 · 點擊句子即可從該句開始</p>
+            
+            <!-- 控制區域 -->
+            <div class="controls-section">
+                <div class="section-title"> 播放設定</div>
+                <div class="row g-3">
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label">🔊 朗讀速度</label>
+                        <select id="rateSelect" class="form-select">
+                            <option value="0.7">0.7 倍 (慢速)</option>
+                            <option value="0.9">0.9 倍</option>
+                            <option value="1.0" selected>1.0 倍 (正常)</option>
+                            <option value="1.25">1.25 倍</option>
+                            <option value="1.5">1.5 倍 (快速)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label">⏱️ 句子間隔 (秒)</label>
+                        <input type="number" id="sentenceGap" class="form-control" value="1.8" step="0.2" min="0.5" max="5">
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label">⏸️ 逗號停頓 (秒)</label>
+                        <input type="number" id="commaPause" class="form-control" value="1.5" step="0.1" min="0.4" max="4">
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label">🕊️ 每三詞微停 (秒)</label>
+                        <input type="number" id="microPause" class="form-control" value="0.55" step="0.1" min="0.2" max="1.8">
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label class="form-label">🔄 重複前等待 (秒)</label>
+                        <input type="number" id="repeatDelay" class="form-control" value="2.5" step="0.3" min="1.0" max="6">
+                    </div>
+                <div class="col-md-3 col-sm-6 d-flex align-items-end gap-2">
+                    <button id="startBtn" class="btn btn-primary" style="flex: 2;">
+                        <i class="bi bi-play-fill me-1"></i> 從頭開始
+                    </button>
+                    <button id="stopBtn" class="btn btn-outline-danger" style="flex: 1;">
+                        <i class="bi bi-stop-fill me-1"></i> 停止
+                    </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 文字輸入區域 -->
+            <div class="text-section">
+                <label class="form-label">✏️ 英文內容 (自動以句號、問號、驚嘆號分句)</label>
+                <textarea id="textInput" rows="5" placeholder="請輸入英文段落，系統會自動依照句號分句。&#10;例如：&#10;The sun was setting behind the hills, painting the sky orange and pink. Students should focus, listen carefully, and write down each phrase. Although it was raining, they decided to go for a walk. Machine learning requires large data.">The sun was setting behind the hills, painting the sky orange and pink. Students should focus, listen carefully, and write down each phrase. Although it was raining, they decided to go for a walk, because the weather felt refreshing. Machine learning models require vast amounts of data for accurate predictions. Please write this sentence slowly, and remember the punctuation rules. A very long sentence without any comma should still have micro pauses inserted after every three words to help students write comfortably.</textarea>
+                <button id="refreshBtn" class="btn btn-outline-secondary btn-sm mt-2">
+                    <i class="bi bi-arrow-repeat me-1"></i> 更新段落顯示
+                </button>
+            </div>
+            
+            <!-- 段落顯示區域 - 可點擊句子 -->
+            <div class="paragraph-display" id="paragraphDisplay">
+                <div class="text-muted text-center py-3">請輸入英文內容並點擊「更新段落顯示」</div>
+            </div>
+            
+            <!-- 狀態區域 -->
+            <div class="status-bar">
+                <div class="status-badge" id="playStatus">⚪ 就緒</div>
+                <div class="current-sentence" id="currentSentenceDisplay">— 尚未播放 —</div>
+            </div>
+            
+            <!-- 規則說明 -->
+            <div class="preview-box">
+                <div class="rule-note">
+                    <i class="bi bi-info-circle-fill me-1"></i>
+                    <strong>聽寫規則說明：</strong><br>
+                    • <strong>精細聽寫模式</strong>：依照句號自動分句，每句播放兩遍。遇到逗號會停頓，連續超過3個單詞會自動插入微停頓。<br>
+                    • <strong>點擊句子</strong>：可以直接點擊下方任何一個句子，從該句開始播放。<br>
+                    • <strong>段落重播</strong>：當整個段落的所有句子都播放完畢後，系統會自動以<strong>正常速度（無微停頓、無重複）</strong>將整個段落朗讀一遍，幫助複習。<br>
+                    • <strong>高亮顯示</strong>：正在朗讀的句子會顯示為<span style="background:#ff9800; color:white; padding:0 4px; border-radius:4px;">橙色</span>，已完成朗讀的句子會顯示為綠色。
+                </div>
+            </div>
+            
+            <!-- 功能特色 -->
+            <div class="features-grid" style="margin-top: 1rem;">
+                <div class="feature-item">
+                    <i class="bi bi-hand-index-thumb feature-icon"></i>
+                    <div class="feature-title">點擊任意句子</div>
+                    <div class="feature-desc">可直接從選定句子開始聽寫</div>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-card-text feature-icon"></i>
+                    <div class="feature-title">自動分句</div>
+                    <div class="feature-desc">依照句號、問號、驚嘆號分割</div>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-three-dots feature-icon"></i>
+                    <div class="feature-title">每三詞微停</div>
+                    <div class="feature-desc">連續超過3個單詞自動停頓</div>
+                </div>
+                <div class="feature-item">
+                    <i class="bi bi-arrow-repeat feature-icon"></i>
+                    <div class="feature-title">段落重播</div>
+                    <div class="feature-desc">完成後自動正常速度重播全段</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <i class="bi bi-mic"></i> 英文聽寫練習 · 點擊句子可從該句開始 · 段落結束後自動重播全段
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // DOM 元素
+        const textarea = document.getElementById('textInput');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const rateSelect = document.getElementById('rateSelect');
+        const sentenceGapInput = document.getElementById('sentenceGap');
+        const commaPauseInput = document.getElementById('commaPause');
+        const microPauseInput = document.getElementById('microPause');
+        const repeatDelayInput = document.getElementById('repeatDelay');
+        const playStatusSpan = document.getElementById('playStatus');
+        const currentSentenceDisplay = document.getElementById('currentSentenceDisplay');
+        const paragraphDisplay = document.getElementById('paragraphDisplay');
+        
+        // 控制變數
+        let isPlaying = false;
+        let currentTaskTimeout = null;
+        let currentUtterance = null;
+        let sentenceQueue = [];
+        let currentSentenceIdx = 0;
+        let isParagraphRepeatMode = false; // 是否正在進行段落重播模式（無微停頓）
+        
+        // 清除所有定時器與語音
+        function abortAll() {
+            if (currentTaskTimeout) {
+                clearTimeout(currentTaskTimeout);
+                currentTaskTimeout = null;
+            }
+            if (currentUtterance) {
+                window.speechSynthesis.cancel();
+                currentUtterance = null;
+            }
+            window.speechSynthesis.cancel();
+        }
+        
+        function stopDictation() {
+            if (!isPlaying && !currentTaskTimeout && !currentUtterance) {
+                abortAll();
+                return;
+            }
+            isPlaying = false;
+            isParagraphRepeatMode = false;
+            abortAll();
+            currentSentenceIdx = 0;
+            playStatusSpan.innerHTML = ' 已停止';
+            currentSentenceDisplay.innerHTML = '— 已中斷 —';
+            clearSentenceHighlights();
+        }
+        
+        // 清除所有句子高亮
+        function clearSentenceHighlights() {
+            document.querySelectorAll('.sentence-item').forEach(item => {
+                item.classList.remove('active-reading', 'completed');
+            });
+        }
+        
+        // 更新句子高亮
+        function updateSentenceHighlight(index, isActive, isCompleted) {
+            const items = document.querySelectorAll('.sentence-item');
+            if (items[index]) {
+                if (isActive) {
+                    items[index].classList.add('active-reading');
+                    items[index].classList.remove('completed');
+                } else if (isCompleted) {
+                    items[index].classList.remove('active-reading');
+                    items[index].classList.add('completed');
+                } else {
+                    items[index].classList.remove('active-reading', 'completed');
+                }
+            }
+        }
+        
+        // 標記當前正在播放的句子
+        function highlightCurrentSentence(index) {
+            const items = document.querySelectorAll('.sentence-item');
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active-reading');
+                    item.classList.remove('completed');
+                } else {
+                    item.classList.remove('active-reading');
+                }
+            });
+        }
+        
+        // 標記已完成的句子
+        function markSentenceCompleted(index) {
+            const items = document.querySelectorAll('.sentence-item');
+            if (items[index]) {
+                items[index].classList.remove('active-reading');
+                items[index].classList.add('completed');
+            }
+        }
+        
+        // 自動分句
+        function splitIntoSentences(text) {
+            let rawSentences = text.split(/(?<=[.!?])\s+/);
+            let result = [];
+            for (let s of rawSentences) {
+                let trimmed = s.trim();
+                if (trimmed.length > 0) {
+                    result.push(trimmed);
+                }
+            }
+            if (result.length === 0 && text.trim().length > 0) {
+                return [text.trim()];
+            }
+            return result;
+        }
+        
+        // 建立朗讀序列（支援逗號停頓 + 每3詞微停）
+        function buildChunks(sentence, commaPauseSec, microPauseSec) {
+            if (!sentence.trim()) return [];
+            
+            let segments = [];
+            const commaIndices = [];
+            let regex = /,/g;
+            let match;
+            while ((match = regex.exec(sentence)) !== null) {
+                commaIndices.push(match.index);
+            }
+            
+            if (commaIndices.length === 0) {
+                segments.push({ text: sentence.trim(), endsWithComma: false });
+            } else {
+                let start = 0;
+                for (let i = 0; i < commaIndices.length; i++) {
+                    let commaPos = commaIndices[i];
+                    let segText = sentence.substring(start, commaPos + 1);
+                    if (segText.trim()) {
+                        segments.push({ text: segText.trim(), endsWithComma: true });
+                    }
+                    start = commaPos + 1;
+                }
+                let lastPart = sentence.substring(start).trim();
+                if (lastPart) {
+                    segments.push({ text: lastPart, endsWithComma: false });
+                }
+            }
+            
+            const MICRO_LIMIT = 3;
+            const finalChunks = [];
+            
+            for (let seg of segments) {
+                let segText = seg.text;
+                let words = segText.split(/\s+/).filter(w => w.length > 0);
+                if (words.length === 0) continue;
+                
+                if (words.length <= MICRO_LIMIT) {
+                    finalChunks.push({
+                        text: segText,
+                        pauseAfter: seg.endsWithComma ? commaPauseSec : 0
+                    });
+                } else {
+                    let tempGroup = [];
+                    for (let i = 0; i < words.length; i++) {
+                        tempGroup.push(words[i]);
+                        if (tempGroup.length === MICRO_LIMIT && i < words.length - 1) {
+                            let groupText = tempGroup.join(' ');
+                            finalChunks.push({ text: groupText, pauseAfter: microPauseSec });
+                            tempGroup = [];
+                        }
+                    }
+                    if (tempGroup.length > 0) {
+                        let groupText = tempGroup.join(' ');
+                        let extra = seg.endsWithComma ? commaPauseSec : 0;
+                        finalChunks.push({ text: groupText, pauseAfter: extra });
+                    } else if (seg.endsWithComma && words.length % MICRO_LIMIT === 0) {
+                        if (finalChunks.length > 0) {
+                            finalChunks[finalChunks.length - 1].pauseAfter += commaPauseSec;
+                        }
+                    }
+                }
+            }
+            return finalChunks;
+        }
+        
+        // 普通朗讀模式（無微停頓，用於段落重播）
+        function speakSentenceNormal(sentence, rate) {
+            return new Promise((resolve, reject) => {
+                const utter = new SpeechSynthesisUtterance(sentence);
+                utter.rate = rate;
+                utter.lang = 'en-US';
+                utter.onend = () => {
+                    currentUtterance = null;
+                    resolve();
+                };
+                utter.onerror = (err) => {
+                    console.warn("語音錯誤", err);
+                    currentUtterance = null;
+                    reject(err);
+                };
+                currentUtterance = utter;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utter);
+            });
+        }
+        
+        // 精細朗讀模式（有逗號停頓和微停頓）
+        function speakSentenceDetailed(sentence, rate, commaPause, microPause) {
+            return new Promise((resolve, reject) => {
+                const chunks = buildChunks(sentence, commaPause, microPause);
+                if (chunks.length === 0) {
+                    resolve();
+                    return;
+                }
+                let idx = 0;
+                function playNext() {
+                    if (!isPlaying) {
+                        reject(new Error("stopped"));
+                        return;
+                    }
+                    if (idx >= chunks.length) {
+                        resolve();
+                        return;
+                    }
+                    const chunk = chunks[idx];
+                    const utter = new SpeechSynthesisUtterance(chunk.text);
+                    utter.rate = rate;
+                    utter.lang = 'en-US';
+                    utter.onend = () => {
+                        currentUtterance = null;
+                        if (chunk.pauseAfter > 0 && isPlaying) {
+                            currentTaskTimeout = setTimeout(() => {
+                                currentTaskTimeout = null;
+                                idx++;
+                                playNext();
+                            }, chunk.pauseAfter * 1000);
+                        } else {
+                            idx++;
+                            playNext();
+                        }
+                    };
+                    utter.onerror = (err) => {
+                        console.warn("語音錯誤", err);
+                        currentUtterance = null;
+                        reject(err);
+                    };
+                    currentUtterance = utter;
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utter);
+                }
+                playNext();
+            });
+        }
+        
+        // 段落重播模式（無微停頓、無重複）
+        async function runParagraphRepeat() {
+            if (sentenceQueue.length === 0) return;
+            
+            isParagraphRepeatMode = true;
+            const rate = parseFloat(rateSelect.value);
+            playStatusSpan.innerHTML = '🔄 段落重播模式 (正常速度)';
+            
+            for (let i = 0; i < sentenceQueue.length; i++) {
+                if (!isPlaying) break;
+                highlightCurrentSentence(i);
+                currentSentenceDisplay.innerHTML = `📖 重播: ${sentenceQueue[i].length > 60 ? sentenceQueue[i].slice(0,60) + '…' : sentenceQueue[i]}`;
+                try {
+                    await speakSentenceNormal(sentenceQueue[i], rate);
+                } catch(e) {
+                    break;
+                }
+                if (!isPlaying) break;
+                if (i < sentenceQueue.length - 1) {
+                    await new Promise(resolve => {
+                        currentTaskTimeout = setTimeout(() => {
+                            currentTaskTimeout = null;
+                            resolve();
+                        }, 800);
+                    });
+                }
+            }
+            
+            if (isPlaying) {
+                playStatusSpan.innerHTML = '✅ 全部完成！';
+                currentSentenceDisplay.innerHTML = '🎉 段落重播完成';
+                clearSentenceHighlights();
+            }
+            isParagraphRepeatMode = false;
+            isPlaying = false;
+            abortAll();
+        }
+        
+        // 主流程：精細聽寫 + 完成後自動段落重播
+        async function runDictation(startIndex = 0) {
+            if (isPlaying) return;
+            
+            const rawText = textarea.value;
+            let sentences = splitIntoSentences(rawText);
+            if (sentences.length === 0) {
+                alert("請輸入英文內容，並使用句號、問號或驚嘆號分句。");
+                return;
+            }
+            
+            stopDictation();
+            isPlaying = true;
+            isParagraphRepeatMode = false;
+            sentenceQueue = [...sentences];
+            currentSentenceIdx = startIndex;
+            
+            const rate = parseFloat(rateSelect.value);
+            const sentenceGap = parseFloat(sentenceGapInput.value);
+            const commaPause = parseFloat(commaPauseInput.value);
+            const microPause = parseFloat(microPauseInput.value);
+            const repeatDelay = parseFloat(repeatDelayInput.value);
+            
+            playStatusSpan.innerHTML = '🎧 精細聽寫模式...';
+            
+            while (isPlaying && currentSentenceIdx < sentenceQueue.length) {
+                const sentence = sentenceQueue[currentSentenceIdx];
+                if (!sentence.trim()) {
+                    currentSentenceIdx++;
+                    continue;
+                }
+                
+                highlightCurrentSentence(currentSentenceIdx);
+                const shortDisplay = sentence.length > 70 ? sentence.slice(0, 70) + '…' : sentence;
+                currentSentenceDisplay.innerHTML = `📖 ${currentSentenceIdx+1}/${sentenceQueue.length}: ${shortDisplay}`;
+                
+                // 第一遍
+                playStatusSpan.innerHTML = `🔊 第1遍 (${currentSentenceIdx+1}/${sentenceQueue.length})`;
+                try {
+                    await speakSentenceDetailed(sentence, rate, commaPause, microPause);
+                } catch(e) {
+                    if (!isPlaying) break;
+                    break;
+                }
+                if (!isPlaying) break;
+                
+                // 等待重複延遲
+                playStatusSpan.innerHTML = `⏳ 等待 ${repeatDelay} 秒後重複句子...`;
+                await new Promise(resolve => {
+                    currentTaskTimeout = setTimeout(() => {
+                        currentTaskTimeout = null;
+                        resolve();
+                    }, repeatDelay * 1000);
+                });
+                if (!isPlaying) break;
+                
+                // 第二遍重複
+                playStatusSpan.innerHTML = `🔄 第2遍重複 (${currentSentenceIdx+1}/${sentenceQueue.length})`;
+                try {
+                    await speakSentenceDetailed(sentence, rate, commaPause, microPause);
+                } catch(e) {
+                    if (!isPlaying) break;
+                    break;
+                }
+                if (!isPlaying) break;
+                
+                // 標記為已完成
+                markSentenceCompleted(currentSentenceIdx);
+                
+                // 句子間隔
+                if (currentSentenceIdx < sentenceQueue.length - 1) {
+                    playStatusSpan.innerHTML = `⏸️ 句子間隔 ${sentenceGap} 秒...`;
+                    await new Promise(resolve => {
+                        currentTaskTimeout = setTimeout(() => {
+                            currentTaskTimeout = null;
+                            resolve();
+                        }, sentenceGap * 1000);
+                    });
+                }
+                if (!isPlaying) break;
+                currentSentenceIdx++;
+            }
+            
+            // 精細聽寫完成後，自動進行段落重播（無微停頓、無重複）
+            if (isPlaying && currentSentenceIdx >= sentenceQueue.length && !isParagraphRepeatMode) {
+                playStatusSpan.innerHTML = '✅ 精細聽寫完成！即將開始段落重播...';
+                currentSentenceDisplay.innerHTML = '🎉 準備段落重播';
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                if (isPlaying) {
+                    clearSentenceHighlights();
+                    await runParagraphRepeat();
+                }
+            }
+            
+            if (!isPlaying && !isParagraphRepeatMode) {
+                playStatusSpan.innerHTML = '⏹️ 已停止';
+            }
+            isPlaying = false;
+            abortAll();
+        }
+        
+        // 更新段落顯示
+        function updateParagraphDisplay() {
+            const rawText = textarea.value;
+            const sentences = splitIntoSentences(rawText);
+            
+            if (sentences.length === 0) {
+                paragraphDisplay.innerHTML = '<div class="text-muted text-center py-3">沒有檢測到有效句子，請使用句號、問號或驚嘆號分句。</div>';
+                return;
+            }
+            
+            let html = '';
+            sentences.forEach((s, idx) => {
+                const shortText = s.length > 200 ? s.slice(0, 200) + '…' : s;
+                html += `
+                    <div class="sentence-item" data-sentence-index="${idx}">
+                        <span class="sentence-number">${idx + 1}</span>
+                        <span class="sentence-text">${escapeHtml(shortText)}</span>
+                    </div>
+                `;
+            });
+            paragraphDisplay.innerHTML = html;
+            
+            // 綁定點擊事件
+            document.querySelectorAll('.sentence-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (isPlaying) {
+                        stopDictation();
+                        setTimeout(() => {
+                            const index = parseInt(item.getAttribute('data-sentence-index'));
+                            runDictation(index);
+                        }, 100);
+                    } else {
+                        const index = parseInt(item.getAttribute('data-sentence-index'));
+                        runDictation(index);
+                    }
+                });
+            });
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 開始按鈕（從頭開始）
+        function onStart() {
+            if (isPlaying) {
+                stopDictation();
+                setTimeout(() => {
+                    updateParagraphDisplay();
+                    runDictation(0).catch(e => console.warn);
+                }, 100);
+            } else {
+                updateParagraphDisplay();
+                runDictation(0).catch(e => console.warn);
+            }
+        }
+        
+        // 事件綁定
+        startBtn.addEventListener('click', onStart);
+        stopBtn.addEventListener('click', () => {
+            stopDictation();
+            playStatusSpan.innerHTML = '⏹️ 已停止';
+            currentSentenceDisplay.innerHTML = '— 未播放 —';
+            clearSentenceHighlights();
+        });
+        refreshBtn.addEventListener('click', () => {
+            updateParagraphDisplay();
+            if (isPlaying) {
+                stopDictation();
+                playStatusSpan.innerHTML = '⏹️ 內容已更新，停止聽寫';
+            }
+        });
+        textarea.addEventListener('input', () => {
+            // 即時更新預覽
+            const sentences = splitIntoSentences(textarea.value);
+            if (sentences.length > 0) {
+                updateParagraphDisplay();
+            }
+            if (isPlaying) {
+                stopDictation();
+                playStatusSpan.innerHTML = '⏹️ 內容已修改，停止聽寫';
+            }
+        });
+        
+        // 初始化
+        updateParagraphDisplay();
+        
+        window.addEventListener('beforeunload', () => {
+            window.speechSynthesis.cancel();
+            if (currentTaskTimeout) clearTimeout(currentTaskTimeout);
+        });
+    </script>
+</body>
+</html>
